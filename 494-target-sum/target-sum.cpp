@@ -1,33 +1,38 @@
 class Solution {
 public:
-    int t;
+   
+    int offset; 
     
-    unordered_map<int, unordered_map<int, int>> dp;
-
-    int move(vector<int>& nums, int sum, int idx) {
-        
+    int move(vector<int>& nums, int sum, int target, int idx, vector<vector<int>>& dp) {
         
         if (idx < 0) {
-            return sum == t;
+            return sum == target;
         }
 
         
-        if (dp.count(idx) && dp[idx].count(sum)) {
-            return dp[idx][sum];
+        if (dp[idx][sum + offset] != -1) { 
+            return dp[idx][sum + offset];
         }
 
-        
-        int positive = move(nums, sum + nums[idx], idx - 1);
-        int negative = move(nums, sum - nums[idx], idx - 1);
+       
+        int positive = move(nums, sum + nums[idx], target, idx - 1, dp);
+        int negative = move(nums, sum - nums[idx], target, idx - 1, dp);
 
-        
-        return dp[idx][sum] = positive + negative;
+       
+        return dp[idx][sum + offset] = positive + negative;
     }
 
     int findTargetSumWays(vector<int>& nums, int target) {
-        t = target;
-        dp.clear(); 
         int n = nums.size();
-        return move(nums, 0, n - 1);
+        int totalSum = 0;
+        for(int x : nums) totalSum += x;
+        
+        
+        offset = totalSum;
+        
+        
+        vector<vector<int>> dp(n, vector<int>(2 * totalSum + 1, -1));
+        
+        return move(nums, 0, target, n - 1, dp);
     }
 };
