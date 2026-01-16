@@ -22,7 +22,7 @@ public:
     }
     int longestPalindromeSubseq(string s) {
         int n = s.size();
-        vector<vector<int>> dp(n+1, vector<int>(n+1, -1));
-        return move(s, 0, n, dp);
+        vector<vector<int>> dp(n, vector<int>(n, -1));
+        return move(s, 0, n-1, dp);
     }
 };
