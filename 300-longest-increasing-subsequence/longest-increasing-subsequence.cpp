@@ -1,33 +1,19 @@
 class Solution {
 public:
-    int n;
-
-    int move(vector<int>& nums, vector<vector<int>>& dp, int last, int idx) {
-
-        if (idx == n) {
-            return 0;
-        }
-
-        if (dp[idx][last + 1] != -1) {
-            return dp[idx][last + 1];
-        }
-
-        int pick = 0;
-
-        if (last == -1 || nums[idx] > nums[last]) {
-            pick = 1 + move(nums, dp, idx, idx + 1);
-        }
-
-        int not_pick = move(nums, dp, last, idx + 1);
-
-        return dp[idx][last + 1] = max(pick, not_pick);
-    }
-
     int lengthOfLIS(vector<int>& nums) {
-        n = nums.size();
+        int n = nums.size();
+        vector<int> dp(n, 1);
+        int maxi = 1;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[j] < nums[i]) {
+                    dp[i] = max(dp[j] + 1, dp[i]);
+                }
+            }
 
-        vector<vector<int>> dp(n, vector<int>(n + 1, -1));
+            maxi = max(maxi, dp[i]);
+        }
 
-        return move(nums, dp, -1, 0);
+        return maxi;
     }
 };
