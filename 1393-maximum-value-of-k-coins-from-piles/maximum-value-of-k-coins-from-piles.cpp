@@ -2,7 +2,7 @@ class Solution {
 public:
     int m;
     int solve(vector<vector<int>>& piles, int k, int i,vector<vector<int>>&dp) {
-
+        if(k==0) return 0;
         if (i == m - 1) {
             int yo = 0;
             int size=piles[m - 1].size();
