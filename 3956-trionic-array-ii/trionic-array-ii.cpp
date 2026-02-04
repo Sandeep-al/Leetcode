@@ -1,176 +1,64 @@
 class Solution {
 public:
-    int n;
-    vector<int> arr;
-    vector<vector<long long>> dp;
-
-    vector<vector<bool>> visited;
-    long long solve(int i, int trend) {
-
-        if (i == n - 1) {
-            if (trend == 3)
-                return arr[i];
-            return LLONG_MIN;
-        }
-        if (visited[i][trend]) {
-            return dp[i][trend];
-        }
-        long long ans = LLONG_MIN;
-        int curr = arr[i];
-        int next = arr[i + 1];
-
-        if (trend == 0) {
-            // skip
-            ans = solve(i + 1, 0);
-
-            // start increasing
-            if (next > curr) {
-                long long take = solve(i + 1, 1);
-                if (take != LLONG_MIN)
-                    ans = max(ans, curr + take);
-            }
-        }
-
-        // trend 1 : increasing
-        else if (trend == 1) {
-            // continue increasing
-            if (next > curr) {
-                long long take = solve(i + 1, 1);
-                if (take != LLONG_MIN)
-                    ans = max(ans, curr + take);
-            }
-            // transition to decreasing
-            else if (next < curr) {
-                long long take = solve(i + 1, 2);
-                if (take != LLONG_MIN)
-                    ans = max(ans, curr + take);
-            }
-        }
-
-        // trend 2 : decreasing
-        else if (trend == 2) {
-            // continue decreasing
-            if (next < curr) {
-                long long take = solve(i + 1, 2);
-                if (take != LLONG_MIN)
-                    ans = max(ans, curr + take);
-            }
-            // transition to final increasing
-            if (next > curr) {
-                long long take = solve(i + 1, 3);
-                if (take != LLONG_MIN)
-                    ans = max(ans, curr + take);
-            }
-        }
-
-        // trend 3 : final increasing
-        else if (trend == 3) {
-
-            // option 1: stop here
-            ans = curr;
-
-            // option 2: continue increasing
-            if (next > curr) {
-                long long take = solve(i + 1, 3);
-                if (take != LLONG_MIN)
-                    ans = max(ans, curr + take);
-            }
-        }
-
-        visited[i][trend] = true;
-        dp[i][trend] = ans;
-        return ans;
-    }
-
-    // long long maxSumTrionic(vector<int>& nums) {
-    //     n = nums.size();
-    //     dp.assign(n, vector<long long>(4, 0));
-    //     visited.assign(n, vector<bool>(4, false));
-    //     arr = nums;
-    //     return solve(0, 0);
-    // }
-
     long long maxSumTrionic(vector<int>& nums) {
-
         int n = nums.size();
-        arr=nums;
-        vector<vector<long long>> dp(n, vector<long long>(4, LLONG_MIN));
+        
+        // --- Initialization (Base Case: i = n-1) ---
+        // These variables represent the state at index (i + 1)
+        long long trend0 = LLONG_MIN;
+        long long trend1 = LLONG_MIN;
+        long long trend2 = LLONG_MIN;
+        long long trend3 = nums[n - 1]; // Only valid state at the very end
 
-        dp[n - 1][0] = LLONG_MIN;
-        dp[n - 1][1] = LLONG_MIN;
-        dp[n - 1][2] = LLONG_MIN;
-        dp[n - 1][3] = arr[n - 1];
-        // to solve i ... i need i+1 so invert loop...
+        // --- Backwards Loop (i = n-2 down to 0) ---
         for (int i = n - 2; i >= 0; i--) {
+            
+            // Temporary variables for the current index 'i'
+            long long curr_trend0 = LLONG_MIN;
+            long long curr_trend1 = LLONG_MIN;
+            long long curr_trend2 = LLONG_MIN;
+            long long curr_trend3 = LLONG_MIN;
 
-            for (int trend = 0; trend <= 3; trend++) {
+            int curr_val = nums[i];
+            int next_val = nums[i + 1];
 
-                long long ans = LLONG_MIN;
-                int curr = arr[i];
-                int next = arr[i + 1];
+            // --- Trend 0 (Start) ---
+            // Option 1: Skip this element
+            curr_trend0 = trend0; 
+            // Option 2: Start Trend 1 (Increasing)
+            if (next_val > curr_val && trend1 != LLONG_MIN) 
+                 curr_trend0 = max(curr_trend0, curr_val + trend1);
 
-                if (trend == 0) {
-                    // skip
-                    ans = dp[i + 1][0];
+            // --- Trend 1 (Increasing leg) ---
+            // Option 1: Continue Increasing
+            if (next_val > curr_val && trend1 != LLONG_MIN)
+                 curr_trend1 = max(curr_trend1, curr_val + trend1);
+            // Option 2: Switch to Trend 2 (Decreasing)
+            else if (next_val < curr_val && trend2 != LLONG_MIN)
+                 curr_trend1 = max(curr_trend1, curr_val + trend2); 
 
-                    // start increasing
-                    if (next > curr) {
-                        long long take = dp[i + 1][1];
-                        if (take != LLONG_MIN)
-                            ans = max(ans, curr + take);
-                    }
-                }
+            // --- Trend 2 (Decreasing leg) ---
+            // Option 1: Continue Decreasing
+            if (next_val < curr_val && trend2 != LLONG_MIN)
+                 curr_trend2 = max(curr_trend2, curr_val + trend2);
+            // Option 2: Switch to Trend 3 (Final Increasing)
+            if (next_val > curr_val && trend3 != LLONG_MIN)
+                 curr_trend2 = max(curr_trend2, curr_val + trend3); 
 
-                // trend 1 : increasing
-                else if (trend == 1) {
-                    // continue increasing
-                    if (next > curr) {
-                        long long take = dp[i + 1][1];
-                        if (take != LLONG_MIN)
-                            ans = max(ans, curr + take);
-                    }
-                    // transition to decreasing
-                    else if (next < curr) {
-                        long long take = dp[i + 1][2];
-                        if (take != LLONG_MIN)
-                            ans = max(ans, curr + take);
-                    }
-                }
+            // --- Trend 3 (Final Increasing leg) ---
+            // Option 1: Stop here (End of array sequence)
+            curr_trend3 = curr_val; 
+            // Option 2: Continue Increasing
+            if (next_val > curr_val && trend3 != LLONG_MIN)
+                 curr_trend3 = max(curr_trend3, curr_val + trend3);
 
-                // trend 2 : decreasing
-                else if (trend == 2) {
-                    // continue decreasing
-                    if (next < curr) {
-                        long long take = dp[i + 1][2];
-                        if (take != LLONG_MIN)
-                            ans = max(ans, curr + take);
-                    }
-                    // transition to final increasing
-                    if (next > curr) {
-                        long long take = dp[i + 1][3];
-                        if (take != LLONG_MIN)
-                            ans = max(ans, curr + take);
-                    }
-                }
-
-                // trend 3 : final increasing
-                else if (trend == 3) {
-
-                    // option 1: stop here
-                    ans = curr;
-
-                    // option 2: continue increasing
-                    if (next > curr) {
-                        long long take = dp[i + 1][3];
-                        if (take != LLONG_MIN)
-                            ans = max(ans, curr + take);
-                    }
-                }
-
-                dp[i][trend] = ans;
-            }
+            // --- Shift Window: Current values become "next" for the upcoming loop ---
+            trend0 = curr_trend0;
+            trend1 = curr_trend1;
+            trend2 = curr_trend2;
+            trend3 = curr_trend3;
         }
 
-        return dp[0][0];
+        return trend0; // The answer for starting at index 0 in state 0
     }
 };
