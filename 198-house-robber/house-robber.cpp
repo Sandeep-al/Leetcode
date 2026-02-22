@@ -24,7 +24,7 @@ public:
     int rob(vector<int>& nums) {
 
         n = nums.size();
-        vector<int> dp(n + 2, -1);
+
         int next1 = 0;
         int next2 = 0;
 
