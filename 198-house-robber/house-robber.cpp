@@ -25,18 +25,20 @@ public:
 
         n = nums.size();
         vector<int> dp(n + 2, -1);
-        dp[n] = 0;
-        dp[n + 1] = 0;
+        int next1 = 0;
+        int next2 = 0;
 
         for (int idx = n - 1; idx >= 0; idx--) {
-            int np = dp[idx + 1];
+            int np = next1;
 
             // pick
-            int p = nums[idx] + dp[idx + 2];
+            int p = nums[idx] + next2;
 
-            dp[idx] = max(np, p);
+            next2 = next1;
+
+            next1 = max(np, p);
         }
 
-        return dp[0];
+        return next1;
     }
 };
