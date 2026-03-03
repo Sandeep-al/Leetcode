@@ -1,6 +1,6 @@
 class Solution {
 public:
-    vector<string>dp;
+    vector<string> dp;
     string reverse(string x) {
         int yo = x.size() - 1;
         int go = 0;
@@ -28,15 +28,29 @@ public:
 
         if (i == 1)
             return "0";
-        
-        if(dp[i]!="") return dp[i];
 
-        return dp[i]=solve(i - 1) + "1" + reverse(inverse(solve(i - 1)));
+        if (dp[i] != "")
+            return dp[i];
+
+        return dp[i] = solve(i - 1) + "1" + reverse(inverse(solve(i - 1)));
     }
+    // char findKthBit(int n, int k) {
+
+    //     dp.assign(n + 1, "");
+    //     string ans = solve(n);
+    //     return ans[k - 1];
+    // }
+
+    // Memoization code
     char findKthBit(int n, int k) {
 
-        dp.assign(n+1,"");
-        string ans=solve(n);
-        return ans[k-1];
+        dp.assign(n + 1, "");
+        dp[1] = "0";
+
+            for (int i = 2; i <= n; i++) {
+            dp[i] = dp[i - 1] + "1" + reverse(inverse(dp[i - 1]));
+        }
+
+        return dp[n][k - 1];
     }
 };
