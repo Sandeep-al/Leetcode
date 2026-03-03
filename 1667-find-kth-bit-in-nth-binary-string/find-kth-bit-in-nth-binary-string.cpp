@@ -42,15 +42,28 @@ public:
     // }
 
     // Memoization code
+    // char findKthBit(int n, int k) {
+
+    //     dp.assign(n + 1, "");
+    //     dp[1] = "0";
+
+    //         for (int i = 2; i <= n; i++) {
+    //         dp[i] = dp[i - 1] + "1" + reverse(inverse(dp[i - 1]));
+    //     }
+
+    //     return dp[n][k - 1];
+    // }
+
+    // space optimization
     char findKthBit(int n, int k) {
 
-        dp.assign(n + 1, "");
-        dp[1] = "0";
-
-            for (int i = 2; i <= n; i++) {
-            dp[i] = dp[i - 1] + "1" + reverse(inverse(dp[i - 1]));
+        string prev = "0";
+        string curr = "";
+        for (int i = 2; i <= n; i++) {
+            curr = prev + "1" + reverse(inverse(prev));
+            prev=curr;
         }
 
-        return dp[n][k - 1];
+        return prev[k - 1];
     }
 };
