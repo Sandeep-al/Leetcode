@@ -30,17 +30,50 @@ public:
 
         return dp[idx1][idx2] = false;
     }
+    // bool isInterleave(string s1, string s2, string s3) {
+    //     if (s1.size() + s2.size() != s3.size())
+    //         return false;
+    //     this->s1 = s1;
+    //     this->s2 = s2;
+    //     this->s3 = s3;
+
+    //     m = s1.size();
+    //     n = s2.size();
+    //     dp.assign(m + 1, vector<int>(n + 1, -1));
+
+    //     return solve(0, 0);
+    // }
     bool isInterleave(string s1, string s2, string s3) {
         if (s1.size() + s2.size() != s3.size())
             return false;
-        this->s1 = s1;
-        this->s2 = s2;
-        this->s3 = s3;
 
         m = s1.size();
         n = s2.size();
-        dp.assign(m + 1, vector<int>(n + 1, -1));
+        dp.assign(m + 1, vector<int>(n + 1, 0));
 
-        return solve(0, 0);
+        dp[m][n] = 1;
+
+        for (int idx1 = m; idx1 >= 0; idx1--) {
+            for (int idx2 = n; idx2 >= 0; idx2--) {
+
+                if (idx1 == m && idx2 == n)
+                    continue;
+                if (s3[idx1 + idx2] == s1[idx1]) {
+
+                    if (dp[idx1 + 1][idx2]) {
+                        dp[idx1][idx2] = true;
+                    }
+                }
+
+                if (s3[idx1 + idx2] == s2[idx2]) {
+
+                    if (dp[idx1][idx2 + 1]) {
+                        dp[idx1][idx2] = true;
+                    }
+                }
+            }
+        }
+
+        return dp[0][0];
     }
 };
