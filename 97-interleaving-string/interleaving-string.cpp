@@ -58,14 +58,14 @@ public:
 
                 if (idx1 == m && idx2 == n)
                     continue;
-                if (s3[idx1 + idx2] == s1[idx1]) {
+                if (idx1<m && s3[idx1 + idx2] == s1[idx1]) {
 
                     if (dp[idx1 + 1][idx2]) {
                         dp[idx1][idx2] = true;
                     }
                 }
 
-                if (s3[idx1 + idx2] == s2[idx2]) {
+                if (idx2<n && s3[idx1 + idx2] == s2[idx2]) {
 
                     if (dp[idx1][idx2 + 1]) {
                         dp[idx1][idx2] = true;
