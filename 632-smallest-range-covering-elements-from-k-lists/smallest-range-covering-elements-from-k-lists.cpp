@@ -17,7 +17,7 @@ public:
 
         vector<int> range = {-1000000, 1000000};
 
-        while (pq.size() == k) {
+        while (true) {
 
             auto curr = pq.top();
             pq.pop();
