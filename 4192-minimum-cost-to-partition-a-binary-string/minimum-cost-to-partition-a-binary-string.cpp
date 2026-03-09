@@ -4,6 +4,7 @@ public:
     int flat;
     int enc;
     string s;
+    
     long long count(long long start, long long end) {
         if (start == 0) {
             return prefix_sum[end];
@@ -15,16 +16,19 @@ public:
         if (end - start == 0) {
             return s[start] == '1' ? enc : flat;
         }
-        long long ans=LONG_LONG_MAX;
+
+        
+        long long ans = LLONG_MAX;
         if ((end - start + 1) % 2 == 0) {
             long long mid = (start + end) / 2;
             ans = solve(start, mid) + solve(mid + 1, end);
         }
 
         long long curr = count(start, end);
-        long long curr_cost = (curr == 0) ? flat : (end - start + 1) * curr * enc;
+        long long curr_cost =
+            (curr == 0) ? flat : (end - start + 1) * curr * enc;
 
-        return min(curr_cost, ans);
+        return  min(curr_cost, ans);
     }
     long long minCost(string s, int encCost, int flatCost) {
         this->s = s;
@@ -38,6 +42,7 @@ public:
             }
             prefix_sum[i] = counter;
         }
+        
 
         return solve(0, s.size() - 1);
     }
