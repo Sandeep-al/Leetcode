@@ -1,45 +1,41 @@
 class Solution {
 public:
-    vector<vector<int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    vector<vector<int>> updateMatrix(vector<vector<int>>& grid) {
-        int m = grid.size();
-        int n = grid[0].size();
-
-        vector<vector<int>> final_ans(m, vector<int>(n, 0));
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        int m = mat.size();
+        int n = mat[0].size();
 
         queue<pair<pair<int, int>, int>> q;
-
+        vector<vector<int>> matrix(m, vector<int>(n, -1));
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                if (grid[i][j] == 0) {
+                if (mat[i][j] == 0) {
                     q.push({{i, j}, 0});
+                    matrix[i][j] = 0;
                 }
             }
         }
 
+        vector<vector<int>> directions = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
         while (!q.empty()) {
             auto it = q.front();
             q.pop();
-            int i = it.first.first;
-            int j = it.first.second;
-            int time = it.second;
 
-            final_ans[i][j] = time;
+            int x = it.first.first;
+            int y = it.first.second;
+            int curr_distance = it.second;
 
             for (auto& jt : directions) {
-                int nrow = i + jt[0];
-                int ncol = j + jt[1];
+                int temp_x = x + jt[0];
+                int temp_y = y + jt[1];
 
-                if (nrow >= 0 && nrow < m && ncol >= 0 && ncol < n &&
-                    grid[nrow][ncol] == 1) {
-
-                    grid[nrow][ncol] = 2;
-
-                    q.push({{nrow, ncol}, time + 1});
+                if (temp_x >= 0 && temp_x < m && temp_y >= 0 && temp_y < n &&
+                    matrix[temp_x][temp_y] == -1) {
+                    q.push({{temp_x, temp_y}, curr_distance + 1});
+                    matrix[temp_x][temp_y] = curr_distance + 1;
                 }
             }
         }
 
-        return final_ans;
+        return matrix;
     }
 };
