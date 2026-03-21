@@ -1,37 +1,32 @@
 class Solution {
 public:
-    vector<vector<int>> travel{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int original;
     int m;
     int n;
-    int starting_pixel_colour;
-    void fill_colour(int i, int j, int color, vector<vector<int>>& image) {
-
-        if (i < 0 || i >= m || j < 0 || j >= n ||
-            image[i][j] != starting_pixel_colour) {
+    int colour;
+    vector<vector<int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    void solve(int i, int j, vector<vector<int>>& grid) {
+        if (i < 0 || j < 0 || j >= n || i >= m || grid[i][j] != original) {
             return;
         }
 
-        image[i][j] = color;
+        grid[i][j] = colour;
 
-        for (auto& it : travel) {
-            int temp_i = it[0] + i;
-            int temp_j = it[1] + j;
+        for (auto& it : directions) {
+            int temp_i = i + it[0];
+            int temp_j = j + it[1];
 
-            fill_colour(temp_i, temp_j, color, image);
+            solve(temp_i, temp_j, grid);
         }
     }
     vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc,
                                   int color) {
-
+        original = image[sr][sc];
         m = image.size();
         n = image[0].size();
-
-        starting_pixel_colour = image[sr][sc];
-
-        if (starting_pixel_colour == color)
-            return image;
-
-        fill_colour(sr, sc, color, image);
+        colour = color;
+        if (original == color) return image;
+        solve(sr, sc, image);
         return image;
     }
 };
