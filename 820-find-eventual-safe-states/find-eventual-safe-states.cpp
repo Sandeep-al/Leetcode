@@ -1,44 +1,39 @@
 class Solution {
 public:
-    bool dfs(int node, vector<int>& vis, vector<vector<int>>& graph,
-             vector<int>& dp) {
-
+    bool dfs(vector<int>& safe, vector<int>& vis, vector<int>&pathvis,
+             vector<vector<int>>& graph, int node) {
         vis[node] = 1;
-        bool ans = true;
+        pathvis[node] = 1;
+
         for (auto& it : graph[node]) {
-
-            if (vis[it] == 1) {
-                return dp[node]=false;
-            }
-
-            if (vis[it] == 0) {
-                ans = ans & dfs(it, vis, graph, dp);
-            }
-
-            else if (vis[it] == 2) {
-                if (dp[it] == 0) { 
-                    return dp[node] = false; 
+            if (!vis[it]) {
+                if (dfs(safe, vis, pathvis, graph, it) == false) {
+                    return false;
                 }
+            } else if (pathvis[it]) {
+                return false;
             }
         }
-        vis[node] = 2;
-        return dp[node] = ans;
+
+        pathvis[node]=0;
+        safe[node] = 1;
+        return true;
     }
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        int V = graph.size();
+        vector<int> safe(V, 0);
+        vector<int> vis(V, 0);
+        vector<int> pathvis(V, 0);
 
-        int n = graph.size();
-        vector<int> dp(n, 1);
-        vector<int> vis(n, 0);
-
-        for (int i = 0; i < n; i++) {
-            if (vis[i] == 0) {
-                dfs(i, vis, graph, dp);
+        for (int i = 0; i < V; i++) {
+            if (!vis[i] && dfs(safe,vis,pathvis,graph,i)) {
+                safe[i] = 1;
             }
         }
 
         vector<int> final_ans;
-        for (int i = 0; i < n; i++) {
-            if (dp[i] == 1) {
+        for (int i = 0; i < V; i++) {
+            if (safe[i]) {
                 final_ans.push_back(i);
             }
         }
