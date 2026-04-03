@@ -1,43 +1,61 @@
 class Solution {
 public:
+    vector<vector<int>> coins;
+    int m;
+    int n;
     vector<vector<vector<int>>> dp;
-
-    int helper(int i,int j,int left,vector<vector<int>>& coins){
-        if(i==coins.size()||j==coins[0].size()) return -1e9;
-
-        if(dp[i][j][left]!=INT_MAX) return dp[i][j][left];
-
-        if(i==coins.size()-1&&j==coins[0].size()-1){
-            int val=coins[i][j];
-            if(val<0&&left>0) return dp[i][j][left]=0;
-            return dp[i][j][left]=val;
+    int solve(int i, int j, int neutralization_points) {
+        if (i < 0 || i >= m || j < 0 || j >= n) {
+            return INT_MIN;
+        }
+        if (dp[i][j][neutralization_points] != INT_MAX) {
+            return dp[i][j][neutralization_points];
         }
 
-        int curr=coins[i][j];
-
-        int down=helper(i+1,j,left,coins);
-        int right=helper(i,j+1,left,coins);
-
-        int res=-1e9;
-        int ans=max(down,right);
-        if(ans!=-1e9){
-            res=ans+curr;
+        if (i == m - 1 && j == n - 1) {
+            if (coins[i][j] >= 0)
+                return coins[i][j];
+            if (neutralization_points > 0)
+                return 0;
+            return coins[i][j];
         }
 
-        if(curr<0&&left>0){
-            int down2=helper(i+1,j,left-1,coins);
-            int right2=helper(i,j+1,left-1,coins);
-            int neutralized=max(down2,right2);
-            
-            res=max(res,neutralized);
+        // positive value
+        int coins_gained = INT_MIN;
+
+        int solve1 = solve(i + 1, j, neutralization_points);
+        int solve2 = solve(i, j + 1, neutralization_points);
+
+        if (solve1 != INT_MIN) {
+            coins_gained = max(coins_gained, solve1 + coins[i][j]);
+        }
+        if (solve2 != INT_MIN) {
+            coins_gained = max(coins_gained, solve2 + coins[i][j]);
+        }
+        if (coins[i][j] < 0) {
+            // use neutralization points
+
+            if (neutralization_points > 0) {
+                int solve1 = solve(i + 1, j, neutralization_points - 1);
+                int solve2 = solve(i, j + 1, neutralization_points - 1);
+
+                if (solve1 != INT_MIN) {
+                    coins_gained = max(coins_gained, solve1);
+                }
+                if (solve2 != INT_MIN) {
+                    coins_gained = max(coins_gained, solve2);
+                }
+            }
         }
 
-        return dp[i][j][left]=res;
+        return dp[i][j][neutralization_points] = coins_gained;
     }
+    int maximumAmount(vector<vector<int>>& coins) {
+        this->coins = coins;
+        m = coins.size();
+        n = coins[0].size();
+        dp.assign(m + 1, vector<vector<int>>(n + 1, vector<int>(4, INT_MAX)));
 
-    int maximumAmount(vector<vector<int>>& coins){
-        int n=coins.size(),m=coins[0].size();
-        dp.assign(n,vector<vector<int>>(m,vector<int>(3,INT_MAX)));
-        return helper(0,0,2,coins);
+        return solve(0, 0, 2);
     }
 };
