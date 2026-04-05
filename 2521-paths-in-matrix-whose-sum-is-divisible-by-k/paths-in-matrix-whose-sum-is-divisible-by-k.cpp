@@ -30,7 +30,7 @@ public:
         this->k = k;
         m = grid.size();
         n = grid[0].size();
-        dp.assign(m+1,vector<vector<int>>(n+1,vector<int>(k+1,-1)));
+        dp.assign(m,vector<vector<int>>(n,vector<int>(k,-1)));
         return solve(0, 0, 0);
     }
 };
