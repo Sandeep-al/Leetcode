@@ -7,7 +7,7 @@ public:
     void solve(vector<int>& curr) {
         if (curr.size() == n) {
             ans.push_back(curr);
-            curr.empty();
+            
             return;
         }
 
