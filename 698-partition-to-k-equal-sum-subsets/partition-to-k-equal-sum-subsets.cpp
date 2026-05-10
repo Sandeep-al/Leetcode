@@ -27,6 +27,7 @@ public:
         return false;
     }
     bool canPartitionKSubsets(vector<int>& nums, int k) {
+        sort(nums.rbegin(), nums.rend());
         this->k = k;
         this->nums = nums;
         n = nums.size();
