@@ -12,7 +12,7 @@ public:
             }
             if (nums[l] <= nums[mid]) {
 
-                if (nums[l] <= target && target <= nums[mid]) {
+                if (nums[l] <= target && target < nums[mid]) {
                     h = mid - 1;
                 } else {
                     l = mid + 1;
@@ -22,7 +22,7 @@ public:
             // otherwise right half is sorted
             else {
 
-                if (nums[h] >= target && target >= nums[mid]) {
+                if (nums[h] >= target && target > nums[mid]) {
                     l = mid + 1;
                 } else {
                     h = mid - 1;
