@@ -12,37 +12,51 @@
  */
 class Solution {
 public:
-    vector<tuple<int, int, int>> final_ans;
-    // col row val
-    void giveid(TreeNode* root, int row, int col) {
+    vector<tuple<int, int, int>> ans;
+    void dfs(int x, int y, TreeNode* root) {
 
-        if (root == nullptr) {
+        if (root == nullptr)
             return;
-        }
 
-        final_ans.push_back({col, row, root->val});
-        giveid(root->left, row + 1, col - 1);
-        giveid(root->right, row + 1, col + 1);
+        ans.push_back({y, x, root->val});
+
+        dfs(x + 1, y - 1, root->left);
+        dfs(x + 1, y + 1, root->right);
     }
     vector<vector<int>> verticalTraversal(TreeNode* root) {
-        
-        giveid(root, 0, 0);
-        sort(final_ans.begin(), final_ans.end());
-        vector<vector<int>>ans;
 
-        for (int i = 0; i < final_ans.size(); i++) {
+        dfs(0, 0, root);
+        sort(ans.begin(), ans.end());
+        vector<vector<int>> final_ans;
 
-            auto [col, row, val] = final_ans[i];
+        vector<int> temp;
 
-            if (ans.empty() || get<0>(final_ans[i - 1]) != col) {
-                ans.push_back({val});
-            } else {
+        int prev_col = INT_MIN;
 
-                ans.back().push_back(val);
+        for (auto& it : ans) {
+
+            int col = get<0>(it);
+            int row = get<1>(it);
+            int val = get<2>(it);
+
+            if (col != prev_col) {
+
+                if (!temp.empty()) {
+                    final_ans.push_back(temp);
+                }
+
+                temp.clear();
+
+                prev_col = col;
             }
+
+            temp.push_back(val);
         }
 
-        return ans;
-    }
+        if (!temp.empty()) {
+            final_ans.push_back(temp);
+        }
 
+        return final_ans;
+    }
 };
