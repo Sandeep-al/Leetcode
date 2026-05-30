@@ -28,13 +28,34 @@ public:
             if (dz[i] >= maxi1) {
                 maxi2 = maxi1;
                 maxi1 = dz[i];
-            } else if (dz[i] > maxi2 ) {
+            } else if (dz[i] > maxi2) {
                 maxi2 = dz[i];
             }
         } // or simply make contributions[i]=0 on equality condition
 
         final_ans = max(final_ans, maxi1 + maxi2 + 1);
         return maxi1 + 1;
+
+        // int left = 0;
+        // int right = 0;
+        // if (adj[curr].size() >= 1)
+        //     left = dfs(adj, adj[curr][0]);
+
+        // if (adj[curr].size() >= 2)
+        //     right = dfs(adj, adj[curr][1]);
+
+        // int ans1 = 0;
+        // int ans2 = 0;
+        // if (adj[curr].size() >= 1 && x[curr] != x[adj[curr][0]]) {
+        //     ans1 = left;
+        // }
+        // if (adj[curr].size() >= 2 && x[curr] != x[adj[curr][1]]) {
+        //     ans2 = right;
+        // }
+
+        // final_ans = max(ans1 + ans2 + 1, final_ans);
+
+        // return 1 + max(ans1, ans2);
     }
     int longestPath(vector<int>& parent, string s) {
 
