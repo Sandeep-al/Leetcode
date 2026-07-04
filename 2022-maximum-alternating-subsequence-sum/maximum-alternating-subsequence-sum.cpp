@@ -1,31 +1,16 @@
 class Solution {
 public:
-    
     long long maxAlternatingSum(vector<int>& nums) {
 
         int n = nums.size();
-        
+
         long long parity_0 = 0;
         long long parity_1 = 0;
 
-        for (int idx = n - 1; idx >= 0; idx--) {
-            for (int parity = 0; parity <= 1; parity++) {
+        for (int i = n - 1; i >= 0; i--) {
 
-                long long curr_parity = (parity == 0) ? parity_0 : parity_1;
-                long long not_take = curr_parity;
-                int curr = (parity == 1) ? nums[idx] : -nums[idx];
-
-                curr_parity = (parity == 0) ? parity_1 : parity_0;
-                long long take = curr + curr_parity;
-
-                long long res = max(take, not_take);
-
-                if (parity == 0) {
-                    parity_0 = res;
-                } else {
-                    parity_1 = res;
-                }
-            }
+            parity_0 = max(parity_0, -1LL * nums[i] + parity_1);
+            parity_1 = max(parity_1, 1LL * nums[i] + parity_0);
         }
 
         return parity_1;
