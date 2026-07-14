@@ -1,9 +1,10 @@
+int dp[202][202][202];
 class Solution {
 public:
     vector<int>nums;
     int n;
     const int mod=1e9+7;
-    int dp[202][202][202];
+    
     int solve(int idx,int curr_gcd1,int curr_gcd2){
         if(idx==n){
             return (curr_gcd1==curr_gcd2 && curr_gcd1!=0);
