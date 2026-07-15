@@ -1,28 +1,33 @@
 class Solution {
 public:
-    
-    int solve(int idx,int bitmask,int n){
-        if(idx==n) return 1;
+    int n;
 
-        int ans=0;
+    int solve(int idx, int bitmask) {
 
-        for(int i=0;i<10;i++){
-            if(idx==0 && i==0) continue;
+        if (idx == n)
+            return 0;
 
-            if(!(bitmask & (1<<i))){
-                ans+=solve(idx+1,(bitmask | (1<<i)),n);
+        int ans = 0;
+
+        for (int i = 0; i < 10; i++) {
+
+            if (idx == 0 && i == 0)
+                continue;
+
+            if (!(bitmask & (1 << i))) {
+
+                ans += 1 + solve(idx + 1, (bitmask | (1 << i)));
             }
         }
 
         return ans;
     }
+
     int countNumbersWithUniqueDigits(int n) {
-        
-        if(n==0) return 1;
-        int ans=0;
-        for(int i=1;i<=n;i++){
-            ans+=solve(0,0,i);
-        }
-        return ans+1;
+        this->n = n;
+        if (n == 0)
+            return 1;
+
+        return solve(0, 0) + 1;
     }
 };
