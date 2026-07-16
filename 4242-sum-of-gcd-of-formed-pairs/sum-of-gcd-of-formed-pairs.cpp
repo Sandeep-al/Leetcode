@@ -10,9 +10,7 @@ public:
         }
 
         sort(prefixgcd.begin(),prefixgcd.end());
-        for(int i=0;i<n;i++){
-            cout<<prefixgcd[i]<<" ";
-        }
+        
         long long sum=0;
         int i=0;
         int j=n-1;
