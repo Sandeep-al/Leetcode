@@ -1,11 +1,13 @@
 class Solution {
 public:
     const long long INF = 4e18;
+
     vector<vector<long long>> dist;
     string source;
     string target;
     int n;
     long long dp[1001];
+
     unordered_map<string, int> mpp;
 
     long long solve(int idx) {
@@ -13,12 +15,14 @@ public:
         if (idx >= n)
             return 0;
 
-        if(dp[idx]!=-2) return dp[idx];
+        if (dp[idx] != -2)
+            return dp[idx];
+
         long long mini = INF;
 
-        for (auto& it : mpp) {
+        for (const auto &it : mpp) {
 
-            string pattern = it.first;
+            const string &pattern = it.first;
             int node1 = it.second;
 
             int len = pattern.size();
@@ -29,10 +33,12 @@ public:
             if (curr_source != pattern)
                 continue;
 
-            if (mpp.find(curr_target) == mpp.end())
+            auto itr = mpp.find(curr_target);
+
+            if (itr == mpp.end())
                 continue;
 
-            int node2 = mpp[curr_target];
+            int node2 = itr->second;
 
             long long curr_cost = dist[node1][node2];
 
@@ -41,48 +47,45 @@ public:
 
             long long next_solve = solve(idx + len);
 
-            if (next_solve != INF) {
+            if (next_solve != INF)
                 mini = min(mini, next_solve + curr_cost);
-            }
         }
 
-        
         if (source[idx] == target[idx]) {
 
             long long next_solve = solve(idx + 1);
 
-            if (next_solve != INF) {
+            if (next_solve != INF)
                 mini = min(mini, next_solve);
-            }
         }
 
-        return dp[idx]=mini;
+        return dp[idx] = mini;
     }
 
-    long long minimumCost(string source, string target,
-                          vector<string>& original,
-                          vector<string>& changed,
-                          vector<int>& cost) {
+    long long minimumCost(const string &source, const string &target,
+                          const vector<string> &original,
+                          const vector<string> &changed,
+                          const vector<int> &cost) {
 
         if (source == target)
-            return 0;   
+            return 0;
 
-        for(int i=0;i<1001;i++){
-            dp[i]=-2;
-        }
+        for (int i = 0; i < 1001; i++)
+            dp[i] = -2;
 
         n = source.size();
+
         this->source = source;
         this->target = target;
 
         int id = 0;
 
-        for (auto& it : original) {
+        for (const auto &it : original) {
             if (mpp.find(it) == mpp.end())
                 mpp[it] = id++;
         }
 
-        for (auto& it : changed) {
+        for (const auto &it : changed) {
             if (mpp.find(it) == mpp.end())
                 mpp[it] = id++;
         }
@@ -94,7 +97,6 @@ public:
         for (int i = 0; i < m; i++)
             dist[i][i] = 0;
 
-     
         for (int i = 0; i < changed.size(); i++) {
 
             int node1 = mpp[original[i]];
@@ -105,7 +107,6 @@ public:
             dist[node1][node2] = min(dist[node1][node2], edge_wt);
         }
 
-        
         for (int k = 0; k < m; k++) {
 
             for (int i = 0; i < m; i++) {
