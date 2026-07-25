@@ -1,30 +1,21 @@
 class Solution {
 public:
     vector<int> arrayRankTransform(vector<int>& arr) {
-        vector<int>ans=arr;
-        sort(ans.begin(),ans.end());
-        if(arr.size()==0) return {};
-        unordered_map<int,int>mpp;
+        vector<int> coords = arr;
 
-        int rank=1;
-        int prev=ans[0];
-        for(int i=0;i<ans.size();i++){
-            if(ans[i]>prev){
-                rank++;
-            }
+        sort(coords.begin(), coords.end());
 
-            mpp[ans[i]]=rank;
-            prev=ans[i];
-        }
+        coords.erase(unique(coords.begin(), coords.end()), coords.end());
 
-        vector<int>final_ans;
+        unordered_map<int, int> mp;
+
+        for (int i = 0; i < coords.size(); i++)
+            mp[coords[i]] = i;
 
         for(int i=0;i<arr.size();i++){
-            final_ans.push_back(mpp[arr[i]]);
+            arr[i]=mp[arr[i]]+1;
         }
 
-        return final_ans;
-
-        
+        return arr;
     }
 };
