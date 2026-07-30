@@ -11,19 +11,15 @@ public:
             v.push_back(it);
         sort(v.begin(), v.end(),
              [](const auto& a, const auto& b) { return a.second > b.second; });
-        unordered_map<char, int> mpp;
+        
         int count = 0;
         int curr = 1;
         int assigned = 0;
         for (auto& jt : v) {
             auto it = jt.first;
-            if (mpp.find(it) != mpp.end()) {
-                count += mpp[it] * jt.second;
-            } else {
-                mpp[it] = curr * jt.second;
-                count += curr * jt.second;
-                assigned++;
-            }
+
+            count += curr * jt.second;
+            assigned++;
 
             if (assigned == 8) {
                 curr++;
