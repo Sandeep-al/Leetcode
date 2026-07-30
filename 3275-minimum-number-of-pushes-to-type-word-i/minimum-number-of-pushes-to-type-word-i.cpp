@@ -18,10 +18,10 @@ public:
         for (auto& jt : v) {
             auto it = jt.first;
             if (mpp.find(it) != mpp.end()) {
-                count += mpp[it];
+                count += mpp[it] * jt.second;
             } else {
-                mpp[it] = curr;
-                count += curr;
+                mpp[it] = curr * jt.second;
+                count += curr * jt.second;
                 assigned++;
             }
 
