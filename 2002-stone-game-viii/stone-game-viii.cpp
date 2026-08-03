@@ -2,7 +2,7 @@ class Solution {
 public:
     vector<int> prefix;
     int n;
-    vector<int> nums;
+    
     int dp[100005];
     int solve(int i) {
 
@@ -20,13 +20,13 @@ public:
     }
     int stoneGameVIII(vector<int>& stones) {
         n = stones.size();
-        nums = stones;
+        
         prefix.assign(n, 0);
 
         prefix[0] = stones[0];
 
         for (int i = 1; i < n; i++) {
-            prefix[i] = prefix[i - 1] + nums[i];
+            prefix[i] = prefix[i - 1] + stones[i];
         }
         for(int i=0;i<100005;i++){
             dp[i]=INT_MAX;
