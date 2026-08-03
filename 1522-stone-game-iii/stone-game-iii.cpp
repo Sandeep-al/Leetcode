@@ -22,25 +22,34 @@ public:
         int n = stoneValue.size();
         nums = stoneValue;
 
-        vector<int> dp(n + 1);
-        dp[n] = 0;
+        int a = 0;
+        int b = 0;
+        int c = 0;
 
         for (int i = n - 1; i >= 0; i--) {
             int maxi = INT_MIN;
             int curr_score = 0;
 
-            for (int x = i; x < min(i + 3, n); x++) {
-                curr_score += nums[x];
-                maxi = max(maxi, curr_score - dp[x + 1]);
+            curr_score += nums[i];
+            maxi = max(maxi, curr_score - a);
+
+            if (i + 1 < n) {
+                curr_score += nums[i + 1];
+                maxi = max(maxi, curr_score - b);
+            }
+            if (i + 2 < n) {
+                curr_score += nums[i + 2];
+                maxi = max(maxi, curr_score - c);
             }
 
-            dp[i] = maxi;
+            c = b;
+            b = a;
+            a = maxi;
         }
 
-        if(dp[0]>0){
+        if (a > 0) {
             return "Alice";
-        }
-        else if(dp[0]<0){
+        } else if (a < 0) {
             return "Bob";
         }
 
