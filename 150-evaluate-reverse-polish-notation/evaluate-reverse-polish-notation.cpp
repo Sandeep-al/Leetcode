@@ -1,83 +1,29 @@
 class Solution {
 public:
-    int convert(string s) {
-
-        int sign = 1;
-        int i = 0;
-        long long num = 0;
-
-        if (s[0] == '-') {
-            sign = -1;
-            i = 1;
-        }
-
-        while (i < s.size()) {
-
-            num = num * 10 + (s[i] - '0');
-
-            i++;
-        }
-
-        return num * sign;
-    }
-
-    string convert_back(long long num) {
-
-        // special case
-        if (num == 0)
-            return "0";
-
-        string ans = "";
-
-        bool negative = false;
-
-        if (num < 0) {
-            negative = true;
-            num = -num;
-        }
-
-        while (num > 0) {
-
-            int digit = num % 10;
-
-            ans.push_back(digit + '0');
-
-            num /= 10;
-        }
-
-        reverse(ans.begin(), ans.end());
-
-        if (negative) {
-            ans = "-" + ans;
-        }
-
-        return ans;
-    }
-
     int evalRPN(vector<string>& tokens) {
-        stack<string> st;
-        for (auto& it : tokens) {
-            if (it != "+" && it != "-" && it != "*" && it != "/") {
-                st.push(it);
+        stack<int> st;
+
+        for (int i = 0; i < tokens.size(); i++) {
+            if (isdigit(tokens[i][0]) || (tokens[i][0] == '-' && tokens[i]!="-")) {
+                st.push(stoi(tokens[i]));
             } else {
-                long long second = convert(st.top())  ;
+
+                int second = st.top();
                 st.pop();
-                long long first = convert(st.top());
+                int first = st.top();
                 st.pop();
-                long long ans = 0;
-                if (it == "+") {
-                    ans = first + second;
-                } else if (it == "-") {
-                    ans = first - second;
-                } else if (it == "*") {
-                    ans = first * second;
-                } else {
-                    ans = first / second;
+                if (tokens[i] == "+") {
+                    st.push(first + second);
+                } else if (tokens[i] == "-") {
+                    st.push(first - second);
+                } else if (tokens[i] == "*") {
+                    st.push(first * second);
+                } else if (tokens[i] == "/") {
+                    st.push(first / second);
                 }
-                st.push(convert_back(ans));
             }
         }
 
-        return convert(st.top());
+        return st.top();
     }
 };
