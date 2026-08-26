@@ -32,20 +32,12 @@ public:
         if (idx2 + 1 < n2 && p[idx2 + 1] == '*') {
             char prev = p[idx2];
 
-            if (prev == '.') {
-                for (int i = idx1; i <= n1; i++) {
-                    ans = ans || solve(i, idx2 + 2);
-                }
-
-            } else {
-
-                ans = ans || solve(idx1, idx2 + 2);
-                for (int i = idx1; i < n1; i++) {
-                    if (s[i] == prev) {
-                        ans = ans || solve(i + 1, idx2 + 2);
-                    } else {
-                        break;
-                    }
+            ans = ans || solve(idx1, idx2 + 2);
+            for (int i = idx1; i < n1; i++) {
+                if (s[i] == prev || prev == '.') {
+                    ans = ans || solve(i + 1, idx2 + 2);
+                } else {
+                    break;
                 }
             }
         }
