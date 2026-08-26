@@ -33,12 +33,9 @@ public:
             char prev = p[idx2];
 
             ans = ans || solve(idx1, idx2 + 2);
-            for (int i = idx1; i < n1; i++) {
-                if (s[i] == prev || prev == '.') {
-                    ans = ans || solve(i + 1, idx2 + 2);
-                } else {
-                    break;
-                }
+
+            if (s[idx1] == prev || prev == '.') {
+                ans = ans || solve(idx1 + 1, idx2);
             }
         }
 
