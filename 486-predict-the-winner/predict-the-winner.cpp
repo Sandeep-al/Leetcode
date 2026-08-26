@@ -1,37 +1,35 @@
 class Solution {
 public:
-    vector<int> nums;
-    int dp[21][21];
-    int solve(int i, int j) {
-        if (i > j) {
+    int n;
+    vector<int>nums;
+    int score(int idx1,int idx2,int parity){
+        if(idx1>idx2){
             return 0;
         }
-        // case 1 take nums[i];
-        if(dp[i][j]!=-1){
-            return dp[i][j];
+        int maxi=0;
+        if(parity==0){
+            maxi=max(maxi,nums[idx1]+score(idx1+1,idx2,1));
+            maxi=max(maxi,nums[idx2]+score(idx1,idx2-1,1));
         }
-        int maxi = 0;
+        else{
+            int left=score(idx1+1,idx2,0);
+            int right=score(idx1,idx2-1,0);
 
-        int takeLeft = nums[i] + min(solve(i + 2, j), solve(i + 1, j - 1));
+            maxi=max(maxi,min(left,right));
+        }
 
-        int takeRight = nums[j] + min(solve(i, j - 2), solve(i + 1, j - 1));
+        return maxi;
 
-        return dp[i][j]=max(takeLeft, takeRight);
     }
     bool predictTheWinner(vector<int>& nums) {
-        this->nums = nums;
-        int n = nums.size();
-        int target = 0;
-        for (auto& it : nums) {
-            target += it;
+        
+        n=nums.size();
+        this->nums=nums;
+        double total=0;
+        for(auto &it:nums){
+            total+=it;
         }
-        memset(dp,-1,sizeof(dp));
-        target = ceil((double)target / 2.0);
-        int ans = solve(0, n - 1);
-        cout << ans;
-        if (ans >= target) {
-            return true;
-        }
-        return false;
+        total=total/2;
+        return score(0,n-1,0)>=total;
     }
 };
