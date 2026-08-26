@@ -4,7 +4,12 @@ public:
     string p;
     int n1;
     int n2;
+    int dp[22][22];
     bool solve(int idx1, int idx2) {
+
+        if(dp[idx1][idx2]!=-1){
+            return dp[idx1][idx2];
+        }
         if (idx1 == n1 && idx2 == n2) {
             return true;
         }
@@ -39,14 +44,14 @@ public:
             }
         }
 
-        return ans;
+        return dp[idx1][idx2]=ans;
     }
     bool isMatch(string s, string p) {
         this->s = s;
         this->p = p;
         n1 = s.size();
         n2 = p.size();
-
+        memset(dp,-1,sizeof(dp));
         return solve(0, 0);
     }
 };
