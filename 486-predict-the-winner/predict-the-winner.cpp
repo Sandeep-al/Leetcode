@@ -15,7 +15,7 @@ public:
             int left=score(idx1+1,idx2,0);
             int right=score(idx1,idx2-1,0);
 
-            maxi=max(maxi,min(left,right));
+            maxi=min(left,right);
         }
 
         return maxi;
