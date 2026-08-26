@@ -24,7 +24,7 @@ public:
 
             return true;
         }
-        int ans = 0;
+        bool ans = 0;
         if (s[idx1] == p[idx2] || p[idx2] == '.') {
             ans = ans || solve(idx1 + 1, idx2 + 1);
         }
