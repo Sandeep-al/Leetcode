@@ -1,75 +1,43 @@
 class Solution {
 public:
+    vector<int> col;
+    vector<int> diag1;
+    vector<int> diag2;
     vector<vector<string>> final_ans;
+    vector<string> curr;
+
     int n;
-    bool can_we_place(vector<vector<char>>& temp, int x, int y) {
-        bool ans = true;
-        for (int j = 0; j < n; j++) {
-            if (temp[x][j] == 'Q')
-                ans = false;
-            if (temp[j][y] == 'Q')
-                ans = false;
+    void solve(int idx) {
+        if (idx == n) {
+            final_ans.push_back(curr);
+
+            return;
         }
-        int i = x, j = y;
-
-        while (i > 0 && j > 0) {
-            i--;
-            j--;
-        }
-
-        while (i < n && j < n) {
-            if (temp[i][j] == 'Q')
-                ans = false;
-            i++;
-            j++;
-        }
-
-        i = x;
-        j = y;
-
-        while (i > 0 && j < n - 1) {
-            i--;
-            j++;
-        }
-
-        while (i < n && j >= 0) {
-            if (temp[i][j] == 'Q')
-                ans = false;
-            i++;
-            j--;
-        }
-
-        return ans;
-    }
-    void solve(vector<vector<char>>& temp, int row) {
-        if (row == n) {
-            vector<string> t;
-            for (int i = 0; i < n; i++) {
-                string x = "";
-                for (int j = 0; j < n; j++) {
-                    x.push_back(temp[i][j]);
-                }
-                t.push_back(x);
-            }
-            final_ans.push_back(t);
-
-            return ;
-        }
-
+        string currs(n, '.');
         for (int i = 0; i < n; i++) {
-            if (can_we_place(temp, row, i)) {
-                temp[row][i] = 'Q';
-                solve(temp, row + 1);
-                temp[row][i] = '.';
+            if (!col[i] && !diag1[idx - i + n - 1] && !diag2[idx + i]) {
+                currs[i] = 'Q';
+                col[i] = 1;
+                diag1[idx - i + n - 1] = 1;
+                diag2[idx + i] = 1;
+                curr.push_back(currs);
+                solve(idx + 1);
+                curr.pop_back();
+                currs[i] = '.';
+                col[i] = 0;
+                diag1[idx - i + n - 1] = 0;
+                diag2[idx + i] = 0;
             }
         }
     }
-
     vector<vector<string>> solveNQueens(int n) {
-        this->n = n;
-        vector<vector<char>> temp(n, vector<char>(n, '.'));
 
-        solve(temp, 0);
+        this->n = n;
+        col.assign(n, 0);
+        diag1.assign(2 * n - 1, 0);
+        diag2.assign(2 * n - 1, 0);
+
+        solve(0);
         return final_ans;
     }
 };
