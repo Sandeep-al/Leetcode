@@ -1,37 +1,63 @@
 class Solution {
 public:
-    int m, n;
-    int dp[21][21];
+    string s;
+    string p;
+    int n1;
+    int n2;
+    bool solve(int idx1, int idx2) {
+        if (idx1 == n1 && idx2 == n2) {
+            return true;
+        }
+        if (idx2 == n2) {
+            return false;
+        }
+        if (idx1 == n1) {
+            int len = n2 - idx2;
+            if (len % 2 == 1) {
+                return false;
+            }
+            for (int i = idx2 + 1; i < n2; i += 2) {
+                if (p[i] != '*') {
+                    return false;
+                }
+            }
 
-    bool move(string& s, string& p, int i, int j) {
-
-        if (j == n) {
-            return i == m;
+            return true;
+        }
+        int ans = 0;
+        if (s[idx1] == p[idx2] || p[idx2] == '.') {
+            ans = ans || solve(idx1 + 1, idx2 + 1);
         }
 
-        if (dp[i][j] != -1)
-            return dp[i][j];
+        if (idx2 + 1 < n2 && p[idx2 + 1] == '*') {
+            char prev = p[idx2];
 
-        bool first_match = (i < m) && (s[i] == p[j] || p[j] == '.');
+            if (prev == '.') {
+                for (int i = idx1; i <= n1; i++) {
+                    ans = ans || solve(i, idx2 + 2);
+                }
 
-        if (j + 1 < n && p[j + 1] == '*') {
+            } else {
 
-            return dp[i][j] = move(s, p, i, j + 2) ||
-                              (first_match && move(s, p, i + 1, j));
+                ans = ans || solve(idx1, idx2 + 2);
+                for (int i = idx1; i < n1; i++) {
+                    if (s[i] == prev) {
+                        ans = ans || solve(i + 1, idx2 + 2);
+                    } else {
+                        break;
+                    }
+                }
+            }
         }
 
-        if (first_match) {
-            return dp[i][j] = move(s, p, i + 1, j + 1);
-        }
-
-        return dp[i][j] = false;
+        return ans;
     }
-
     bool isMatch(string s, string p) {
-        m = s.size();
-        n = p.size();
+        this->s = s;
+        this->p = p;
+        n1 = s.size();
+        n2 = p.size();
 
-        memset(dp, -1, sizeof(dp));
-        return move(s, p, 0, 0);
+        return solve(0, 0);
     }
 };
