@@ -1,57 +1,45 @@
 class Solution {
 public:
-    int m, n;
-    vector<vector<int>> directions = {{-1,0},{1,0},{0,-1},{0,1}};
-
-    int compute(vector<vector<int>>& visited,
-                vector<vector<int>>& grid,
-                int i, int j, int remain) {
-
-        if (i < 0 || i >= m || j < 0 || j >= n ||
-            grid[i][j] == -1 || visited[i][j] == 1) {
+    int m;
+    int n;
+    vector<vector<int>> vis;
+    vector<vector<int>> grid;
+    int solve(int i, int j, int remaining) {
+        if (i < 0 || i >= m || j < 0 || j >= n || vis[i][j] ||
+            grid[i][j] == -1) {
             return 0;
         }
-
-        
-        remain--;
-
         if (grid[i][j] == 2) {
-            return remain == 0;
+            return remaining == -1;
         }
-
-        visited[i][j] = 1;
-        int sum = 0;
-
-        for (int k = 0; k < 4; k++) {
-            int ni = i + directions[k][0];
-            int nj = j + directions[k][1];
-            sum += compute(visited, grid, ni, nj, remain);
-        }
-
-        visited[i][j] = 0;
-        return sum;
+        vis[i][j] = 1;
+        int ans = 0;
+        ans += solve(i + 1, j, remaining - 1);
+        ans += solve(i, j + 1, remaining - 1);
+        ans += solve(i - 1, j, remaining - 1);
+        ans += solve(i, j - 1, remaining - 1);
+        vis[i][j] = 0;
+        return ans;
     }
-
     int uniquePathsIII(vector<vector<int>>& grid) {
         m = grid.size();
         n = grid[0].size();
-
-        int si = 0, sj = 0;
-        int remain = 0;
-        vector<vector<int>> visited(m, vector<int>(n, 0));
-
+        vis.assign(m, vector<int>(n, 0));
+        this->grid = grid;
+        int total = 0;
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                if (grid[i][j] != -1) {
-                    remain++;              // count 0,1,2
-                }
+                total += (grid[i][j] == 0);
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
                 if (grid[i][j] == 1) {
-                    si = i;
-                    sj = j;
+                    return solve(i, j, total);
                 }
             }
         }
 
-        return compute(visited, grid, si, sj, remain);
+        return 0;
     }
 };
