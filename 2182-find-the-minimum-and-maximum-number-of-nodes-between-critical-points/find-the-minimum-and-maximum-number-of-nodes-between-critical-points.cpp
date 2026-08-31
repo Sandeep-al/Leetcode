@@ -30,8 +30,8 @@ public:
                     last = i;
                     latest = i;
                 } else {
-                    mini = min(mini, i - latest + 1);
-                    maxi = max(maxi, i - last + 1);
+                    mini = min(mini, i - latest);
+                    maxi = max(maxi, i - last);
 
                     latest = i;
                 }
@@ -41,8 +41,8 @@ public:
                     last = i;
                     latest = i;
                 } else {
-                    mini = min(mini, i - latest + 1);
-                    maxi = max(maxi, i - last + 1);
+                    mini = min(mini, i - latest);
+                    maxi = max(maxi, i - last);
 
                     latest = i;
                 }
@@ -57,6 +57,6 @@ public:
             return {-1, -1};
         }
 
-        return {mini-1, maxi-1};
+        return {mini, maxi};
     }
 };
