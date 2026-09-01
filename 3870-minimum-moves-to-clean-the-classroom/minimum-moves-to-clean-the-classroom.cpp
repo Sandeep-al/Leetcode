@@ -14,8 +14,7 @@ public:
     int minMoves(vector<string>& classroom, int energy) {
         int m = classroom.size();
         int n = classroom[0].size();
-
-        int start_i, start_j;
+        int start_i = 0, start_j = 0;
         int litterCount = 0;
 
         vector<vector<int>> litterId(m, vector<int>(n, -1));
@@ -33,19 +32,15 @@ public:
             }
         }
 
-        // 1. Changed to standard queue
         queue<Node> q;
 
-        // 2. Replaced 'dist' with a 'visited' boolean array to prevent cycles
-        vector<vector<vector<vector<bool>>>> visited(
-            m, vector<vector<vector<bool>>>(
-                   n, vector<vector<bool>>(
-                          energy + 1, vector<bool>(1 << litterCount, false))));
+        vector<vector<vector<int>>> max_energy(
+            m, vector<vector<int>>(
+                   n, vector<int>(1 << litterCount, -1)));
 
-        // starting state
         int startMask = 0;
 
-        visited[start_i][start_j][energy][startMask] = true;
+        max_energy[start_i][start_j][startMask] = energy;
         q.push(Node(start_i, start_j, energy, startMask, 0));
 
         while (!q.empty()) {
@@ -58,12 +53,10 @@ public:
             int curr_mask = curr.mask;
             int curr_cost = curr.cost;
 
-            // all litter collected
             if (curr_mask == (1 << litterCount) - 1) {
                 return curr_cost;
             }
 
-            // DOWN
             if (curr_i + 1 < m && classroom[curr_i + 1][curr_j] != 'X') {
                 int ni = curr_i + 1;
                 int nj = curr_j;
@@ -71,8 +64,7 @@ public:
                 int newenergy = curr_energy;
 
                 if (classroom[ni][nj] == 'L') {
-                    int id = litterId[ni][nj];
-                    newmask = curr_mask | (1 << id);
+                    newmask = curr_mask | (1 << litterId[ni][nj]);
                 }
 
                 if (classroom[ni][nj] == 'R') {
@@ -82,14 +74,13 @@ public:
                 }
 
                 if (curr_energy > 0 && newenergy >= 0 &&
-                    !visited[ni][nj][newenergy][newmask]) {
+                    newenergy > max_energy[ni][nj][newmask]) {
                     
-                    visited[ni][nj][newenergy][newmask] = true;
+                    max_energy[ni][nj][newmask] = newenergy;
                     q.push(Node(ni, nj, newenergy, newmask, curr_cost + 1));
                 }
             }
 
-            // UP
             if (curr_i - 1 >= 0 && classroom[curr_i - 1][curr_j] != 'X') {
                 int ni = curr_i - 1;
                 int nj = curr_j;
@@ -97,8 +88,7 @@ public:
                 int newenergy = curr_energy;
 
                 if (classroom[ni][nj] == 'L') {
-                    int id = litterId[ni][nj];
-                    newmask = curr_mask | (1 << id);
+                    newmask = curr_mask | (1 << litterId[ni][nj]);
                 }
 
                 if (classroom[ni][nj] == 'R') {
@@ -108,14 +98,13 @@ public:
                 }
 
                 if (curr_energy > 0 && newenergy >= 0 &&
-                    !visited[ni][nj][newenergy][newmask]) {
+                    newenergy > max_energy[ni][nj][newmask]) {
                     
-                    visited[ni][nj][newenergy][newmask] = true;
+                    max_energy[ni][nj][newmask] = newenergy;
                     q.push(Node(ni, nj, newenergy, newmask, curr_cost + 1));
                 }
             }
 
-            // RIGHT
             if (curr_j + 1 < n && classroom[curr_i][curr_j + 1] != 'X') {
                 int ni = curr_i;
                 int nj = curr_j + 1;
@@ -123,8 +112,7 @@ public:
                 int newenergy = curr_energy;
 
                 if (classroom[ni][nj] == 'L') {
-                    int id = litterId[ni][nj];
-                    newmask = curr_mask | (1 << id);
+                    newmask = curr_mask | (1 << litterId[ni][nj]);
                 }
 
                 if (classroom[ni][nj] == 'R') {
@@ -134,14 +122,13 @@ public:
                 }
 
                 if (curr_energy > 0 && newenergy >= 0 &&
-                    !visited[ni][nj][newenergy][newmask]) {
+                    newenergy > max_energy[ni][nj][newmask]) {
                     
-                    visited[ni][nj][newenergy][newmask] = true;
+                    max_energy[ni][nj][newmask] = newenergy;
                     q.push(Node(ni, nj, newenergy, newmask, curr_cost + 1));
                 }
             }
 
-            // LEFT
             if (curr_j - 1 >= 0 && classroom[curr_i][curr_j - 1] != 'X') {
                 int ni = curr_i;
                 int nj = curr_j - 1;
@@ -149,8 +136,7 @@ public:
                 int newenergy = curr_energy;
 
                 if (classroom[ni][nj] == 'L') {
-                    int id = litterId[ni][nj];
-                    newmask = curr_mask | (1 << id);
+                    newmask = curr_mask | (1 << litterId[ni][nj]);
                 }
 
                 if (classroom[ni][nj] == 'R') {
@@ -160,9 +146,9 @@ public:
                 }
 
                 if (curr_energy > 0 && newenergy >= 0 &&
-                    !visited[ni][nj][newenergy][newmask]) {
+                    newenergy > max_energy[ni][nj][newmask]) {
                     
-                    visited[ni][nj][newenergy][newmask] = true;
+                    max_energy[ni][nj][newmask] = newenergy;
                     q.push(Node(ni, nj, newenergy, newmask, curr_cost + 1));
                 }
             }
