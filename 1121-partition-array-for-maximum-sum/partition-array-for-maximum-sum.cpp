@@ -2,28 +2,35 @@ class Solution {
 public:
     int k;
     int n;
-    int function(int i, vector<int>& arr,vector<int>&dp) {
-        if(i==n) return 0;
+    vector<int> arr;
+    int dp[502];
+    int solve(int x) {
 
-        if(dp[i]!=-1){
-            return dp[i];
-        }
-        int range = min(i + k, n);
-        int global_maxi = arr[i];
-        int arr_maxi = arr[i];
-
-        for (int x = i; x < range; x++) {
-            arr_maxi = max(arr_maxi, arr[x]);
-            int result = arr_maxi * (x - i + 1) + function(x + 1, arr,dp);
-            global_maxi = max(global_maxi, result);
+        if (x == n) {
+            return 0;
         }
 
-        return dp[i]=global_maxi;
+        if (dp[x] != -1)
+            return dp[x];
+        int limit = min(n - 1, x + k - 1);
+        int maxi = INT_MIN;
+        int maxi_ans = INT_MIN;
+        for (int i = x; i <= limit; i++) {
+            maxi = max(maxi, arr[i]);
+
+            int len = i - x + 1;
+            int value = len * maxi;
+
+            maxi_ans = max(maxi_ans, value + solve(i + 1));
+        }
+
+        return dp[x] = maxi_ans;
     }
-    int maxSumAfterPartitioning(vector<int>& arr, int k1) {
-        k =k1;
+    int maxSumAfterPartitioning(vector<int>& arr, int k) {
         n = arr.size();
-        vector<int>dp(n+1,-1);
-        return function(0,arr,dp);
+        this->k = k;
+        this->arr = arr;
+        memset(dp, -1, sizeof(dp));
+        return solve(0);
     }
 };
