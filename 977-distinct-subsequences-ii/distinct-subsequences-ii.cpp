@@ -1,20 +1,28 @@
+#include <numeric>
+#include <string>
+#include <vector>
+
 class Solution {
 public:
-    int distinctSubseqII(string s) {
-        vector<long long> last(26,0);
+    int distinctSubseqII(std::string s) {
+        long long endsWith[26] = {0};
+        long long MOD = 1e9 + 7;
 
-        long long total=0;
-        
-        int mod=1e9+7;
-        for(char ch:s){
-            int idx= ch-'a';
-            long long oldtotal=total;
-            long long newSub=( oldtotal+1-last[idx]+ mod) % mod;
-            total=(total + newSub)% mod;
-            last[idx]=(last[idx]+newSub)%mod;
-            
+        for (char c : s) {
+            long long currentTotal = 0;
+
+            for (int i = 0; i < 26; i++) {
+                currentTotal = (currentTotal + endsWith[i]) % MOD;
+            }
+
+            endsWith[c - 'a'] = (1 + currentTotal) % MOD;
         }
 
-        return total;
+        long long totalDistinct = 0;
+        for (int i = 0; i < 26; i++) {
+            totalDistinct = (totalDistinct + endsWith[i]) % MOD;
+        }
+
+        return totalDistinct;
     }
 };
