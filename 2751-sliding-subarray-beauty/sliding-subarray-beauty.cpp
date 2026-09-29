@@ -1,7 +1,7 @@
 class Solution {
 public:
     vector<int> getSubarrayBeauty(vector<int>& nums, int k, int x) {
-        map<int, int> mpp;
+        unordered_map<int, int> mpp;
         for (int i = -1; i >= -50; i--) {
             mpp[i] = 0;
         }
