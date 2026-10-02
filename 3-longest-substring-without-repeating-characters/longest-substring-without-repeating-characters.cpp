@@ -10,9 +10,7 @@ public:
 
             while (mpp[nums[r]] > 1 && l <= r) {
                 mpp[nums[l]]--;
-                if (mpp[nums[l]] == 0) {
-                    mpp.erase(nums[l]);
-                }
+                
                 l++;
             }
 
