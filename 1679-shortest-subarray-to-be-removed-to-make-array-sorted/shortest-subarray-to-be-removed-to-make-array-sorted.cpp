@@ -56,7 +56,7 @@ public:
             int ans = bs(nums[i], nums, p2, n - 1);
 
             if (ans == -1) {
-                maxi=max(curr,maxi);
+                continue;
             } else {
                 curr += n - ans;
                 maxi = max(maxi, curr);
