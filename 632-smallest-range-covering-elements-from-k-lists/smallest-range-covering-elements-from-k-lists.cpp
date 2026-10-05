@@ -15,7 +15,7 @@ public:
         int mini2 = INT_MAX;
 
         int l = 0;
-        map<int,int> mpp;
+        unordered_map<int,int> mpp;
         for (int r = 0; r < n; r++) {
             mpp[yo[r].second]++;
 
