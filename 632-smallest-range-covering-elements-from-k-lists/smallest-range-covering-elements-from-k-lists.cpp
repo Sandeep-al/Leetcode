@@ -1,44 +1,44 @@
 class Solution {
 public:
     vector<int> smallestRange(vector<vector<int>>& nums) {
-
+        vector<pair<int, int>> yo;
         int k = nums.size();
-
-        // {value, list_index, element_index}
-        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>>
-            pq;
-
-        int current_max = INT_MIN;
-
-        for (int i = 0; i < k; i++) {
-            pq.push({nums[i][0], i, 0});
-            current_max = max(current_max, nums[i][0]);
-        }
-
-        vector<int> range = {-1000000, 1000000};
-
-        while (true) {
-
-            auto curr = pq.top();
-            pq.pop();
-
-            int min_value = curr[0];
-            int list_idx = curr[1];
-            int elem_idx = curr[2];
-
-            if (current_max - min_value < range[1] - range[0]) {
-                range = {min_value, current_max};
-            }
-
-            if (elem_idx + 1 < nums[list_idx].size()) {
-                int next_val = nums[list_idx][elem_idx + 1];
-                pq.push({next_val, list_idx, elem_idx + 1});
-                current_max = max(current_max, next_val);
-            } else {
-                break;
+        for (int i = 0; i < nums.size(); i++) {
+            for (int j = 0; j < nums[i].size(); j++) {
+                yo.push_back({nums[i][j], i});
             }
         }
+        int n=yo.size();
+        sort(yo.begin(), yo.end());
 
-        return range;
+        int mini1 = 0;
+        int mini2 = INT_MAX;
+
+        int l = 0;
+        map<int,int> mpp;
+        for (int r = 0; r < n; r++) {
+            mpp[yo[r].second]++;
+
+            while (mpp.size() == k) {
+                if (mini2 - mini1 > (yo[r].first - yo[l].first)) {
+
+                    mini1 = yo[l].first;
+                    mini2 = yo[r].first;
+                } else if (mini2 - mini1 == (yo[r].first - yo[l].first)) {
+                    if (yo[l].first < mini1) {
+                        mini1 = yo[l].first;
+                        mini2 = yo[r].first;
+                    }
+                }
+
+                mpp[yo[l].second]--;
+                if (mpp[yo[l].second] == 0) {
+                    mpp.erase(yo[l].second);
+                }
+                l++;
+            }
+        }
+
+        return {mini1, mini2};
     }
 };
