@@ -1,45 +1,41 @@
 class Solution {
 public:
-    bool can_we(int capacity, int days, vector<int>& weights) {
-
+    int fdays(int capacity, vector<int>& nums) {
+        int n = nums.size();
+        int days = 1; 
         int curr = 0;
-        int curr_days = 0;
-        for (int i = 0; i < weights.size(); i++) {
 
-            if (curr + weights[i] > capacity) {
-                curr_days++;
-                curr = 0;
+        for (int i = 0; i < n; i++) {
+
+            if (nums[i] > capacity) {
+                return INT_MAX;
             }
 
-            if (curr + weights[i] <= capacity) {
-                curr += weights[i];
+            if (curr + nums[i] > capacity) {
+                days++;
+                curr = nums[i];
             } else {
-                return false;
+                curr += nums[i];
             }
         }
 
-        if(curr){
-            curr_days++;
-        }
-
-        return curr_days <= days;
+        return days;
     }
+
     int shipWithinDays(vector<int>& weights, int days) {
+        int n = weights.size();
+        int lo = 0;
+        int hi = INT_MAX;
 
-        int low = 0;
-        int high = 1e9;
-        int ans = 0;
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-
-            if (can_we(mid, days, weights)) {
-                ans = mid;
-                high = mid - 1;
+        while (hi - lo > 1) {
+            int mid = lo + (hi - lo) / 2;
+            if (fdays(mid, weights) <= days) {
+                hi = mid;
             } else {
-                low = mid + 1;
+                lo = mid;
             }
         }
 
-        return ans;
+        return hi;
     }
 };
