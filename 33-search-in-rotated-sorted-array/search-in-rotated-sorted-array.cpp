@@ -1,6 +1,6 @@
 class Solution {
 public:
-    int search2(vector<int> nums, int target, int l, int r) {
+    int search2(vector<int>& nums, int target, int l, int r) {
         // element<=target
         int n = nums.size();
         int lo = l;
