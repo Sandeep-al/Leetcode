@@ -15,9 +15,9 @@ public:
             return 0;
         }
 
-        sort(candies.begin(),candies.end());
+        
         int lo=0;
-        int hi=candies[candies.size()-1]+1;
+        int hi=*max_element(candies.begin(),candies.end())+1;
 
         while(hi-lo>1){
             int mid=(hi-lo)/2+lo;
