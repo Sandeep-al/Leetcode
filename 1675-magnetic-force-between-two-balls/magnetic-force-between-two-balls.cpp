@@ -1,28 +1,35 @@
+
 class Solution {
 public:
-    int visited(vector<int>& nums, int x) {
-        int i = 0;
-        int cnt = 0;
-        while (i < nums.size()) {
-            cnt++;
-            auto it = lower_bound(nums.begin(), nums.end(), nums[i] + x);
-            i = it - nums.begin();
+    bool visited(vector<int>& nums, int x, int m) {
+        int cnt = 1;
+        int last = nums[0];
+
+        for (int i = 1; i < nums.size(); i++) {
+            if (nums[i] - last >= x) {
+                cnt++;
+                last = nums[i];
+
+                if (cnt >= m) return true;
+            }
         }
 
-        return cnt;
+        return false;
     }
-    int maxDistance(vector<int>& position, int m) {
-        int lo=0;
-        int hi=INT_MAX;
-        sort(position.begin(),position.end());
-        while(hi-lo>1){
-            int mid=(hi-lo)/2+lo;
 
-            if(visited(position,mid)>=m){
-                lo=mid;
-            }
-            else{
-                hi=mid;
+    int maxDistance(vector<int>& position, int m) {
+        sort(position.begin(), position.end());
+
+        int lo = 0;
+        int hi = position.back() - position[0] + 1;
+
+        while (hi - lo > 1) {
+            int mid = lo + (hi - lo) / 2;
+
+            if (visited(position, mid, m)) {
+                lo = mid;
+            } else {
+                hi = mid;
             }
         }
 
