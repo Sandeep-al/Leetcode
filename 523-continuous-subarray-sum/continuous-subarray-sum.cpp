@@ -1,24 +1,23 @@
 class Solution {
 public:
     bool checkSubarraySum(vector<int>& nums, int k) {
-        unordered_map<long long, long long> mpp;
-        mpp[0] = -1;
-        long long count = 0;
         int n = nums.size();
-        vector<long long> prefix(n, 0);
-        prefix[0] = nums[0];
-        for (int i = 1; i < n; i++) {
-            prefix[i] = prefix[i - 1] + nums[i];
+        vector<int> prefix(n + 1, 0);
+
+        for (int i = 1; i <= n; i++) {
+            prefix[i] = prefix[i - 1] + nums[i - 1];
         }
 
-        for (int i = 0; i < n; i++) {
+        unordered_map<int, int> mpp;
+        mpp[0] = 0;
 
-            long long curr = ((prefix[i] % k) + k) % k;
+        for (int i = 1; i <= n; i++) {
+            int curr = prefix[i] % k;
 
             if (mpp.find(curr) != mpp.end()) {
-                if (i - mpp[curr] >= 2) {
+                if ((i - mpp[curr]) > 1) {
                     return 1;
-                }
+                };
             } else {
                 mpp[curr] = i;
             }
