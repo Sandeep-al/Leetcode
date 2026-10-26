@@ -20,7 +20,7 @@ public:
     vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
         n = graph.size();
         vector<int> ans;
-        vector<int> vis(n, 0);
+        
         dfs(graph, 0, ans);
 
         return final_ans;
