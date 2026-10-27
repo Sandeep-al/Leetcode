@@ -7,15 +7,13 @@ public:
         vector<vector<int>> vis(m, vector<int>(n, 0));
 
         queue<pair<int, pair<int, int>>> q;
+        vis[entrance[0]][entrance[1]] = 1;
         q.push({0, {entrance[0], entrance[1]}});
         vector<int> dx = {0, 0, -1, 1};
         vector<int> dy = {1, -1, 0, 0};
 
-        int dist = -1;
-
         while (!q.empty()) {
 
-            dist++;
             auto [dist, z] = q.front();
             q.pop();
             int x = z.first;
