@@ -1,24 +1,27 @@
 class Solution {
 public:
-    void dfs(int node,int parent, int& total, vector<vector<pair<int, int>>>& adj) {
-
+    int dfs(int node, int parent, vector<vector<pair<int, int>>>& adj) {
+        int current_total = 0;
+        
         for (auto& it : adj[node]) {
-            if(it.first!=parent){
-            total += it.second;
-            dfs(it.first,node,total, adj);
+            int neighbor = it.first;
+            int cost = it.second;
+            
+            if (neighbor != parent) {
+                current_total += cost + dfs(neighbor, node, adj);
             }
         }
+        
+        return current_total;
     }
+
     int minReorder(int n, vector<vector<int>>& connections) {
         vector<vector<pair<int, int>>> adj(n);
         for (auto& it : connections) {
-            int from = it[0];
-            int to = it[1];
             adj[it[0]].push_back({it[1], 1});
             adj[it[1]].push_back({it[0], 0});
         }
-        int total=0;
-        dfs(0,-1,total,adj);
-        return total;
+        
+        return dfs(0, -1, adj);
     }
 };
