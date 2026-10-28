@@ -3,21 +3,22 @@ public:
     void dfs(int& mini, int node, vector<vector<pair<int, int>>>& adj,
              vector<int>& vis) {
 
+        vis[node] = 1;
+
         for (auto& it : adj[node]) {
 
             int neigh = it.first;
             int wt = it.second;
-            if (wt < vis[neigh]) {
-                vis[neigh] = wt;
-                mini = min(mini, wt);
+            mini = min(mini, wt);
+            if (!vis[neigh]) {
+
                 dfs(mini, neigh, adj, vis);
             }
         }
     }
     int minScore(int n, vector<vector<int>>& roads) {
         vector<vector<pair<int, int>>> adj(n);
-        vector<int> vis(n, INT_MAX);
-        vis[0] = -1;
+        vector<int> vis(n);
 
         for (auto& it : roads) {
             int from = it[0] - 1;
