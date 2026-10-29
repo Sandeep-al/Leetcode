@@ -19,6 +19,7 @@ public:
             for (int x = 0; x < 4; x++) {
                 if (!col[x]) {
                     ans[i] = x + 1;
+                    break;
                 }
             }
         }
